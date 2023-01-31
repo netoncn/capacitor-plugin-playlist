@@ -121,6 +121,10 @@ export interface AudioTrack {
      * Title of the track
      */
     title: string;
+    /**
+     * Use fake user agent
+     */
+    isFakeUserAgent: boolean;
 }
 
 /**

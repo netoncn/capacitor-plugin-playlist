@@ -52,6 +52,8 @@ export class RmxAudioPlayer {
     private _hasError: boolean = false;
     private _hasLoaded: boolean = false;
     private _currentItem: AudioTrack | null = null;
+    private _volume: number = 0.8;
+    private _isMuted: boolean = false;
 
     /**
      * The current summarized state of the player, as a string. It is preferred that you use the 'isX' accessors,
@@ -310,7 +312,16 @@ export class RmxAudioPlayer {
      * controlled by setting the overall hardware volume.
      */
     setVolume = (volume: number) => {
-        return Playlist.setPlaybackVolume({volume});
+        if (volume <= 0) 
+            this._isMuted = true;
+        else 
+            this._volume = volume;
+
+        const newVolume = this._isMuted ? 0 : volume;
+
+        Playlist.setPlaybackVolume({volume: newVolume}); 
+
+        return this.on('volumechange', () => {});
     };
 
     /**
@@ -319,6 +330,59 @@ export class RmxAudioPlayer {
     setLoop = (loop: boolean) => {
         return Playlist.setLoop({loop: loop});
     };
+
+    /**
+     * Somente pra funcionar integração com UI existente
+     */
+     setMute = (isMuted: boolean) => {
+        this._isMuted = isMuted;
+        return true;
+    }
+
+    /**
+     * Somente pra funcionar integração com UI existente
+     */
+    setFullscreen = (isFullScreen: boolean) => {
+        return isFullScreen;
+    }
+
+    /**
+     * Somente pra funcionar integração com UI existente
+     */
+    setControls = () => {
+        return true;
+    }
+
+    /**
+     * Somente pra funcionar integração com UI existente
+     */
+    setQuality = (quality: string) => {
+        return quality;
+    }
+
+    /**
+     * Somente pra funcionar integração com UI existente
+     */
+    setSubtitles = (subtitle: string) => {
+        return subtitle;
+    }
+
+    /**
+     * Seek to the given position in the currently playing track. If the value exceeds the track length,
+     * the track will complete and playback of the next track will begin.
+     */
+    seek = (position: number) => {
+        return Playlist.seekTo({position});
+    };
+
+    getState() {
+        const state = { 
+            playerPresentationMode: this._currentState, 
+            playerIsMuted: this._isMuted,
+            playerVolume: this._volume
+        }
+        return state;
+    }
 
     /**
      * Status event handling
@@ -371,7 +435,8 @@ export class RmxAudioPlayer {
      * @param eventName Name of event to subscribe to.
      * @param callback The callback function to receive the event data
      */
-    on(eventName: 'status', callback: OnStatusCallback): void;
+    // on(eventName: 'status', callback: OnStatusCallback): void;
+    on(eventName: string, callback?: OnStatusCallback): void;
     on(eventName: string, callback: AudioPlayerEventHandler) {
         if (!Object.prototype.hasOwnProperty.call(this.handlers, eventName)) {
             this.handlers[eventName] = [];
@@ -385,6 +450,7 @@ export class RmxAudioPlayer {
      * @param handle The event handler to destroy. Ensure that this is the SAME INSTANCE as the handler
      * that was passed in to create the subscription!
      */
+    off(eventName: string, handle?: Function | null | undefined): void;
     off(eventName: string, handle: AudioPlayerEventHandler) {
         if (Object.prototype.hasOwnProperty.call(this.handlers, eventName)) {
             const handleIndex = this.handlers[eventName].indexOf(handle);
