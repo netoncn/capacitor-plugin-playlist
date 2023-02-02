@@ -32,7 +32,7 @@ class AudioTrack (private val config: JSONObject) : PlaylistItem {
             info.put("artist", artist)
             info.put("album", album)
             info.put("title", title)
-            // info.put("isFakeUserAgent", isFakeUserAgent)
+            info.put("isFakeUserAgent", isFakeUserAgent)
         } catch (e: JSONException) {
             // I can think of no reason this would ever fail
         }
@@ -92,7 +92,7 @@ class AudioTrack (private val config: JSONObject) : PlaylistItem {
     override val artist: String
         get() = config.optString("artist")
 
-    // override val isFakeUserAgent: String
-    //     get() = config.optString("isFakeUserAgent")
+    val isFakeUserAgent: Boolean
+        get() = config.optBoolean("isFakeUserAgent", false)
 
 }

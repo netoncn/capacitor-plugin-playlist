@@ -60,6 +60,7 @@ class PlaylistPlugin : Plugin(), OnStatusReportListener {
         val options = PlaylistItemOptions(optionsArgs)
 
         val trackItems: ArrayList<AudioTrack> = getTrackItems(items)
+        (this.context.applicationContext as App).configureExoMedia(trackItems.firstOrNull()?.isFakeUserAgent ?:false)
         audioPlayerImpl!!.playlistManager.setAllItems(trackItems, options)
         for (playerItem in trackItems) {
             if (playerItem.trackId != null) {
@@ -301,6 +302,16 @@ class PlaylistPlugin : Plugin(), OnStatusReportListener {
         call.resolve()
 
         Log.i(TAG,"addItem")
+    }
+
+    @PluginMethod
+    fun setPlaybackVolume(call: PluginCall) {
+        val volume = call.getFloat("volume", audioPlayerImpl!!.volume)!!
+        audioPlayerImpl!!.volume = volume
+
+        call.resolve()
+
+        Log.i(TAG,"volume ${volume}")
     }
 
     override fun handleOnDestroy() {

@@ -237,7 +237,8 @@ export class RmxAudioPlayer {
      * Begin playback. If no tracks have been added, this has no effect.
      */
     play = () => {
-        return Playlist.play();
+        Playlist.play();
+        return this.on('radioStatus', () => {});
     };
 
     /**
@@ -273,7 +274,8 @@ export class RmxAudioPlayer {
      * Pause playback
      */
     pause = () => {
-        return Playlist.pause();
+        Playlist.pause();
+        return this.on('radioStatus', () => {});
     };
 
     /**

@@ -1,6 +1,6 @@
 {
   "name": "band-capacitor-plugin-playlist",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Playlist ",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -10,7 +10,7 @@
     "dist/",
     "ios/",
     "android/",
-    "CapacitorPluginPlaylist.podspec"
+    "BandCapacitorPluginPlaylist.podspec"
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",

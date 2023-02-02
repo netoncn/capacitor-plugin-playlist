@@ -246,9 +246,14 @@ class PlaylistManager(application: Application) :
     ) {
         volumeLeft = left
         volumeRight = right
-        if (currentMediaPlayer != null && currentMediaPlayer!!.get() != null) {
-            Log.i("PlaylistManager", "setVolume completing with volume = $left")
-            currentMediaPlayer!!.get()!!.setVolume(volumeLeft, volumeRight)
+
+        try {
+            if (playlistHandler?.currentMediaPlayer != null) {
+                Log.i("PlaylistManager", "setVolume completing with volume = $left")
+                playlistHandler?.currentMediaPlayer?.setVolume(volumeLeft, volumeRight)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "setVolume: Error setting volume: " + e.message)
         }
     }
 
@@ -258,9 +263,14 @@ class PlaylistManager(application: Application) :
 
     fun setPlaybackSpeed(@FloatRange(from = 0.0, to = 1.0) speed: Float) {
         playbackSpeed = speed
-        if (playlistHandler!!.currentMediaPlayer != null &&  playlistHandler!!.currentMediaPlayer!! is AudioApi) {
-            Log.i(TAG, "setPlaybackSpeed completing with speed = $speed")
-            (playlistHandler!!.currentMediaPlayer as AudioApi?)!!.setPlaybackSpeed(playbackSpeed)
+
+        try {
+            if (playlistHandler?.currentMediaPlayer != null &&  playlistHandler?.currentMediaPlayer!! is AudioApi) {
+                Log.i(TAG, "setPlaybackSpeed completing with speed = $speed")
+                (playlistHandler!!.currentMediaPlayer as AudioApi?)!!.setPlaybackSpeed(playbackSpeed)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "setPlaybackSpeed: Error setting playback speed: " + e.message)
         }
     }
 

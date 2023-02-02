@@ -71,6 +71,10 @@ class AudioApi(context: Context) : BaseMediaApi() {
         audioPlayer.setVolume(left, right)
     }
 
+    fun setMute(isMuted: Boolean) {
+        if(isMuted) audioPlayer.setVolume(0.0F,0.0F) else audioPlayer.setVolume(1.0F,1.0F)
+    }
+
     override fun seekTo(@IntRange(from = 0L) milliseconds: Long) {
         audioPlayer.seekTo(milliseconds.toInt().toLong())
     }
